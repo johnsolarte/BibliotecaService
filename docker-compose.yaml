@@ -1,17 +1,31 @@
-server:
-  port: ${PORT:8080}  # Las plataformas asignan puerto dinámicamente
 
-spring:
-  datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:h2:mem:testdb}
-    username: ${SPRING_DATASOURCE_USERNAME:sa}
-    password: ${SPRING_DATASOURCE_PASSWORD:password}
+version: '3.8'
 
-  jpa:
-    hibernate:
-      ddl-auto: ${DDL_AUTO:create-drop}
-    show-sql: true
+services:
+  biblioteca-app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:h2:mem:bibliotecadb
+      - SPRING_DATASOURCE_USERNAME=sa
+      - SPRING_DATASOURCE_PASSWORD=password
+      - DDL_AUTO=create-drop
+    networks:
+      - biblioteca-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/api/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+volumes:
+  postgres_data:
+    driver: local
 
-  h2:
-    console:
-      enabled: true
+networks:
+  biblioteca-network:
+    driver: bridge
