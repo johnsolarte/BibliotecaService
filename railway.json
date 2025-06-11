@@ -1,0 +1,19 @@
+{
+  "$schema": "https://railway.com/railway.schema.json",
+  "construir": {
+    "constructor": "DOCKERFILE",
+    "dockerfilePath": "Archivo Docker"
+  },
+  "desplegar": {
+    "tiempo de ejecución": "V2",
+    "numReplicas": 1,
+    "sleepApplication": falso,
+    "multiRegionConfig": {
+      "us-east4-eqdc4a": {
+        "numReplicas": 1
+      }
+    },
+    "restartPolicyType": "EN_FALLO",
+    "restartPolicyMaxRetries": 10
+  }
+}
